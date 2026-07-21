@@ -1,21 +1,24 @@
 package ui.pages;
 
-import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-
-import java.time.Duration;
-
+import ui.wrappers.Button;
+import ui.wrappers.Input;
+import ui.wrappers.TextElement;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.shadowCss;
 import static com.codeborne.selenide.Selenide.*;
-import static ui.dict.Elements.*;
+import static ui.dict.Elements.SIGN_IN;
 
 @Log4j2
 public class LoginPage {
 
     private final String LOGIN = "[name=email]";
     private final String PASSWORD = "[name=password]";
+    private final Input loginInput = new Input($(LOGIN));
+    private final Input passwordInput = new Input($(PASSWORD));
+    private final Button signInButton = new Button($(byText(SIGN_IN)));
+    private final TextElement loginErrorMessage = new TextElement($("[role='alert'], small.Kkpqjk"));
 
     @Step("Открыть страницу авторизации")
     public void openPage() {
@@ -27,22 +30,22 @@ public class LoginPage {
     public void login(String user, String password) {
         log.info("Login with user: {}", user);
         if ($(shadowCss("#accept", "#usercentrics-cmp-ui")).exists()) {
-            $(shadowCss("#accept", "#usercentrics-cmp-ui")).click();
+            $(shadowCss("#accept", "#usercentrics-cmp-ui"))
+                    .click();
             sleep(1000);
         }
         log.info("Filling email field");
-        $(LOGIN).shouldBe(Condition.visible, Duration.ofSeconds(10)).setValue(user);
+        loginInput.setValue(user);
         log.info("Filling password field");
-        $(PASSWORD).shouldBe(Condition.visible, Duration.ofSeconds(10)).setValue(password);
+        passwordInput.setValue(password);
         log.info("Clicking Sign In button");
-        $(byText(SIGN_IN)).shouldBe(Condition.visible).click();
+        signInButton.click();
         sleep(3000);
     }
 
     @Step("Проверить ошибку авторизации")
     public void checkLoginError() {
         log.info("Checking login error message");
-        $("[role='alert'], small.Kkpqjk")
-                .shouldBe(Condition.visible, Duration.ofSeconds(10));
+        loginErrorMessage.shouldBeVisible();
     }
 }
