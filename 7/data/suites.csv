@@ -1,7 +1,0 @@
-"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"Проверка логина с позитивным логином и паролем","14736","Проверка логина с позитивным логином и паролем","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.LoginTest","Smoke","tests.ui.LoginTest","checkLoginWithPositiveCredentials"
-"Проверка логина с негативным логином и паролем","6223","Проверка логина с негативным логином и паролем","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.LoginTest","Smoke","tests.ui.LoginTest","checkLoginWithNegativeCredentials"
-"Проверка создания нового Test Run","12193","Создание нового тестового запуска","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.TestRunTest","Smoke","tests.ui.TestRunTest","createTestRun"
-"Проверка создания нового проекта","7919","Создание нового проекта","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.ProjectTest","Smoke","tests.ui.ProjectTest","createProject"
-"Проверка логина с негативным логином и паролем","6508","Проверка логина с негативным логином и паролем","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.LoginTest","Smoke","tests.ui.LoginTest","checkLoginWithNegativeCredentials"
-"Проверка создания нового тест-кейса","11527","Создание нового тест-кейса","Qase suite","2026-07-23","passed","2026-07-23","tests.ui.TestCaseTest","Smoke","tests.ui.TestCaseTest","createTestCase"
