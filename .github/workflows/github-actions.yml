@@ -4,18 +4,26 @@ name: Qase Diploma CI
 
 on:
   push:
-    branches: [ "master", "main", "feature/*" ]
+    branches:
+      - master
+      - main
+      - feature/*
   pull_request:
-    branches: [ "master", "main", "feature/*" ]
-
+    branches:
+      - master
+      - main
+      - feature/*
   workflow_dispatch:
 
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 
 jobs:
+
   build:
 
     runs-on: ubuntu-latest
@@ -35,7 +43,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin'
+          distribution: temurin
           cache: maven
 
 
@@ -43,24 +51,45 @@ jobs:
         run: mvn clean test
 
 
-      - name: Allure Report action
-        uses: simple-elf/allure-report-action@master
+      - name: Generate Allure Report
         if: always()
+        uses: simple-elf/allure-report-action@master
         with:
           allure_results: target/allure-results
           allure_history: allure-history
 
 
-      - name: Check Allure report
+      - name: Check Allure files
         if: always()
         run: |
+          echo "Allure history:"
           ls -la allure-history
 
 
-      - name: Deploy report to Github Pages
+      - name: Upload Pages artifact
         if: always()
-        uses: peaceiris/actions-gh-pages@v4
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          path: allure-history
+
+
+
+  deploy:
+
+    needs: build
+
+    if: always()
+
+    runs-on: ubuntu-latest
+
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+
+    steps:
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
