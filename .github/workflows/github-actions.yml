@@ -8,19 +8,17 @@ on:
       - master
       - main
       - feature/*
+
   pull_request:
     branches:
       - master
       - main
       - feature/*
-  workflow_dispatch:
 
+  workflow_dispatch:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
-
 
 jobs:
 
@@ -33,6 +31,7 @@ jobs:
       QASE_PASSWORD: ${{ secrets.QASE_PASSWORD }}
       HEADLESS: true
 
+
     steps:
 
       - name: Checkout
@@ -43,7 +42,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: temurin
+          distribution: 'temurin'
           cache: maven
 
 
@@ -51,45 +50,27 @@ jobs:
         run: mvn clean test
 
 
-      - name: Generate Allure Report
+      - name: Get Allure history
+        uses: actions/checkout@v4
         if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
+
+
+      - name: Allure Report action
         uses: simple-elf/allure-report-action@master
+        if: always()
         with:
           allure_results: target/allure-results
           allure_history: allure-history
 
 
-      - name: Check Allure files
+      - name: Deploy report to Github Pages
         if: always()
-        run: |
-          echo "Allure history:"
-          ls -la allure-history
-
-
-      - name: Upload Pages artifact
-        if: always()
-        uses: actions/upload-pages-artifact@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: allure-history
-
-
-
-  deploy:
-
-    needs: build
-
-    if: always()
-
-    runs-on: ubuntu-latest
-
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-
-    steps:
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-history
