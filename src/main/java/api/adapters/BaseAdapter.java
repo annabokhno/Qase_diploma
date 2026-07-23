@@ -2,6 +2,7 @@ package api.adapters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
@@ -21,6 +22,7 @@ public class BaseAdapter {
             .setBasePath("/v1")
             .setContentType(ContentType.JSON)
             .addHeader("Token", "741bbe5084bc1400f5f2568acdf788174bef2fd44d0a16298775832db2f7c080")
+            .addFilter(new AllureRestAssured())
             .build();
 
     public static ResponseSpecification ok200 = new ResponseSpecBuilder()

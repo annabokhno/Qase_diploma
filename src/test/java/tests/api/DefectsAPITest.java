@@ -48,8 +48,8 @@ public class DefectsAPITest {
         DefectRq rq = defectRequest();
         DefectRs rs = DefectsAdapter.createDefect(PROJECT, rq);
         defectId = rs.getResult().getId();
-        Assert.assertTrue(rs.getStatus());
-        Assert.assertNotNull(defectId);
+        Assert.assertTrue(rs.getStatus(), "Статус ответа должен быть true");
+        Assert.assertNotNull(defectId, "ID созданного дефекта не должен быть null");
     }
 
     @Test(
@@ -66,9 +66,9 @@ public class DefectsAPITest {
     public void getDefectAPITest() {
         defectId = DefectsAdapter.createDefect(PROJECT, defectRequest()).getResult().getId();
         DefectRs rs = DefectsAdapter.getDefect(PROJECT, defectId);
-        Assert.assertTrue(rs.getStatus());
-        Assert.assertEquals(rs.getResult().getTitle(), "API defect");
-        Assert.assertEquals(rs.getResult().getActual_result(), "Actual result");
+        Assert.assertTrue(rs.getStatus(), "Статус ответа должен быть true");
+        Assert.assertEquals(rs.getResult().getTitle(), "API defect", "Название дефекта не соответствует ожидаемому");
+        Assert.assertEquals(rs.getResult().getActual_result(), "Actual result", "Фактический результат дефекта не соответствует ожидаемому");
     }
 
     @Test(

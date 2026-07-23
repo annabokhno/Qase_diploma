@@ -1,19 +1,17 @@
 package tests.ui;
 
+import api.adapters.ProjectAdapter;
 import io.qameta.allure.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
-import utils.QaseApiClient;
+import ui.dto.Project;
+import ui.dto.ProjectFactory;
+import ui.dto.TestRun;
+import ui.dto.TestRunFactory;
 
 public class TestRunTest extends BaseTest {
 
     private String projectCode;
-    private String generateProjectName() {
-        return "Automation Project " + System.currentTimeMillis();
-    }
-    private String generateCode() {
-        return "A" + (System.currentTimeMillis() % 100000);
-    }
 
     @Test(
             priority = 1,
@@ -28,25 +26,23 @@ public class TestRunTest extends BaseTest {
     @Description("Проверка создания нового Test Run")
     @Severity(SeverityLevel.CRITICAL)
     public void createTestRun() {
-        String project = generateProjectName();
-        String code = generateCode();
+        Project project = ProjectFactory.getProject();
+        TestRun testRun = TestRunFactory.getTestRun();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectStep.openProject(project);
-        projectName = project;
-        projectCode = code;
+        projectStep.createProject(project.getName(), project.getCode());
+        projectStep.openProject(project.getName());
+        projectName = project.getName();
+        projectCode = project.getCode();
         testRunStep.openTestRuns();
-        testRunStep.createRun("Regression run " + System.currentTimeMillis());
+        testRunStep.createRun(testRun.getName());
     }
 
     @AfterMethod(alwaysRun = true)
     public void deleteCreatedProject() {
         if (projectCode != null) {
             try {
-                QaseApiClient.deleteProject(projectCode);
-            } catch (Exception e) {
-                System.out.println("Не удалось удалить проект через API: " + projectCode);
-                e.printStackTrace();
+                ProjectAdapter.deleteProject(projectCode);
+            } catch (Exception ignored) {
             } finally {
                 projectCode = null;
                 projectName = null;

@@ -48,8 +48,8 @@ public class CaseAPITest {
         CaseRq rq = getCaseRequest();
         CaseRs rs = CasesAdapter.createCase(PROJECT_CODE, rq);
         caseId = rs.getResult().getId();
-        Assert.assertTrue(rs.getStatus());
-        Assert.assertNotNull(caseId);
+        Assert.assertTrue(rs.getStatus(), "Статус ответа должен быть true");
+        Assert.assertNotNull(caseId, "ID созданного тест-кейса не должен быть null");
     }
 
     @Test(
@@ -67,9 +67,9 @@ public class CaseAPITest {
         CaseRq rq = getCaseRequest();
         caseId = CasesAdapter.createCase(PROJECT_CODE, rq).getResult().getId();
         CaseRs rs = CasesAdapter.getCase(PROJECT_CODE, caseId);
-        Assert.assertTrue(rs.getStatus());
-        Assert.assertEquals(rs.getResult().getTitle(), rq.getTitle());
-        Assert.assertEquals(rs.getResult().getDescription(), rq.getDescription());
+        Assert.assertTrue(rs.getStatus(), "Статус ответа должен быть true");
+        Assert.assertEquals(rs.getResult().getTitle(), rq.getTitle(), "Название тест-кейса не соответствует ожидаемому");
+        Assert.assertEquals(rs.getResult().getDescription(), rq.getDescription(), "Описание тест-кейса не соответствует ожидаемому");
     }
 
     @Test(

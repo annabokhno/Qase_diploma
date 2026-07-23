@@ -1,21 +1,16 @@
 package tests.ui;
 
+import api.adapters.ProjectAdapter;
+import ui.dto.Project;
+import ui.dto.ProjectFactory;
 import io.qameta.allure.*;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import ui.pages.ProjectPage;
-import org.testng.annotations.AfterMethod;
-import utils.QaseApiClient;
-
 
 public class ProjectTest extends BaseTest {
 
     private String projectCode;
-    private String generateProjectName() {
-        return "Automation Project " + System.currentTimeMillis();
-    }
-    private String generateCode() {
-        return "A" + (System.currentTimeMillis() % 100000);
-    }
 
     @Test(
             priority = 1,
@@ -30,12 +25,32 @@ public class ProjectTest extends BaseTest {
     @Description("Проверка создания нового проекта")
     @Severity(SeverityLevel.CRITICAL)
     public void createProject() {
-        String project = generateProjectName();
-        String code = generateCode();
+        Project project = ProjectFactory.getProject();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+    }
+
+    @Test(
+            priority = 2,
+            description = "Открытие существующего проекта",
+            testName = "Открытие проекта"
+    )
+    @Owner("Bokhno A.M.")
+    @Epic("Qase")
+    @Feature("Projects")
+    @Story("Open project")
+    @Description("Проверка открытия проекта")
+    @Severity(SeverityLevel.NORMAL)
+    public void openProject() {
+        Project project = ProjectFactory.getProject();
+        loginStep.auth(EMAIL, PASSWORD);
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+        projectStep.openProject(project.getName());
+        projectStep.checkOpened(project.getCode());
     }
 
     @Test(
@@ -50,14 +65,13 @@ public class ProjectTest extends BaseTest {
     @Description("Проверка редактирования информации о существующем проекте")
     @Severity(SeverityLevel.NORMAL)
     public void editProject() {
-        String project = generateProjectName();
-        String code = generateCode();
-        String updatedName = "Updated Project " + System.currentTimeMillis();
+        Project project = ProjectFactory.getProject();
+        String updatedName = "Updated " + ProjectFactory.getProject().getName();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
-        projectStep.editProject(project, updatedName);
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+        projectStep.editProject(project.getName(), updatedName);
         projectStep.checkUpdated(updatedName);
         projectName = updatedName;
     }
@@ -74,16 +88,15 @@ public class ProjectTest extends BaseTest {
     @Description("Проверка удаления существующего проекта")
     @Severity(SeverityLevel.CRITICAL)
     public void deleteProject() {
-        String project = generateProjectName();
-        String code = generateCode();
+        Project project = ProjectFactory.getProject();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
-        projectStep.deleteProject(project);
-        projectStep.checkDeleted(project);
-        projectCode =null;
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+        projectStep.deleteProject(project.getName());
+        projectStep.checkDeleted(project.getName());
         projectName = null;
+        projectCode = null;
     }
 
     @Test(
@@ -98,36 +111,13 @@ public class ProjectTest extends BaseTest {
     @Description("Проверка поиска проекта по названию")
     @Severity(SeverityLevel.NORMAL)
     public void searchProject() {
-        String project = generateProjectName();
-        String code = generateCode();
+        Project project = ProjectFactory.getProject();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
-        projectStep.search(project);
-        projectStep.checkSearch(project);
-    }
-
-    @Test(
-            priority = 2,
-            description = "Открытие существующего проекта",
-            testName = "Открытие проекта"
-    )
-    @Owner("Bokhno A.M.")
-    @Epic("Qase")
-    @Feature("Projects")
-    @Story("Open project")
-    @Description("Проверка открытия проекта")
-    @Severity(SeverityLevel.NORMAL)
-    public void openProject() {
-        String project = generateProjectName();
-        String code = generateCode();
-        loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
-        projectStep.openProject(project);
-        projectStep.checkOpened(code);
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+        projectStep.search(project.getName());
+        projectStep.checkSearch(project.getName());
     }
 
     @Test(
@@ -142,13 +132,12 @@ public class ProjectTest extends BaseTest {
     @Description("Проверка перехода к созданию нового тест-кейса")
     @Severity(SeverityLevel.CRITICAL)
     public void createTestCase() {
-        String project = generateProjectName();
-        String code = generateCode();
+        Project project = ProjectFactory.getProject();
         loginStep.auth(EMAIL, PASSWORD);
-        projectStep.createProject(project, code);
-        projectName = project;
-        projectCode = code;
-        projectStep.openProject(project);
+        projectStep.createProject(project.getName(), project.getCode());
+        projectName = project.getName();
+        projectCode = project.getCode();
+        projectStep.openProject(project.getName());
         new ProjectPage()
                 .openTestCases()
                 .clickCreateCase()
@@ -160,10 +149,8 @@ public class ProjectTest extends BaseTest {
     public void deleteCreatedProject() {
         if (projectCode != null) {
             try {
-                QaseApiClient.deleteProject(projectCode);
-            } catch (Exception e) {
-                System.out.println("Не удалось удалить проект через API: " + projectCode);
-                e.printStackTrace();
+                ProjectAdapter.deleteProject(projectCode);
+            } catch (Exception ignored) {
             } finally {
                 projectCode = null;
                 projectName = null;
