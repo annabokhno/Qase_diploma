@@ -35,7 +35,6 @@ jobs:
       QASE_PASSWORD: ${{ secrets.QASE_PASSWORD }}
       HEADLESS: true
 
-
     steps:
 
       - name: Checkout
@@ -54,7 +53,7 @@ jobs:
         run: mvn clean test
 
 
-      - name: Generate Allure report
+      - name: Generate Allure Report
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
@@ -62,7 +61,7 @@ jobs:
           allure_history: allure-history
 
 
-      - name: Upload Allure artifact
+      - name: Upload Pages artifact
         if: always()
         uses: actions/upload-pages-artifact@v3
         with:
@@ -74,25 +73,16 @@ jobs:
 
     needs: build
 
-    runs-on: ubuntu-latest
-
     if: always()
 
-
-    permissions:
-      pages: write
-      id-token: write
-
+    runs-on: ubuntu-latest
 
     environment:
-
       name: github-pages
-
       url: ${{ steps.deployment.outputs.page_url }}
-
 
     steps:
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v5
