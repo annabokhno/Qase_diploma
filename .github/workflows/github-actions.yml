@@ -17,13 +17,6 @@ on:
 
   workflow_dispatch:
 
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-
 jobs:
 
   build:
@@ -40,7 +33,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -48,10 +40,16 @@ jobs:
           distribution: temurin
           cache: maven
 
-
       - name: Run tests
         run: mvn clean test
 
+      - name: Get Allure history
+        uses: actions/checkout@v2
+        if: always()
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages
 
       - name: Generate Allure Report
         if: always()
@@ -60,29 +58,10 @@ jobs:
           allure_results: target/allure-results
           allure_history: allure-history
 
-
-      - name: Upload Pages artifact
+      - name: Deploy report to Github Pages
         if: always()
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: allure-history
-
-
-
-  deploy:
-
-    needs: build
-
-    if: always()
-
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-
-      - name: Deploy Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+        uses: peaceiris/actions-gh-pages@v2
+        env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
