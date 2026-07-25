@@ -11,8 +11,6 @@ import io.restassured.specification.ResponseSpecification;
 
 public class BaseAdapter {
 
-    private static final String API_TOKEN = System.getenv("QASE_API_TOKEN");
-
     public static Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .setPrettyPrinting()
@@ -23,7 +21,7 @@ public class BaseAdapter {
             .setBaseUri("https://api.qase.io")
             .setBasePath("/v1")
             .setContentType(ContentType.JSON)
-            .addHeader("Token", API_TOKEN)
+            .addHeader("Token", "741bbe5084bc1400f5f2568acdf788174bef2fd44d0a16298775832db2f7c080")
             .addFilter(new AllureRestAssured())
             .build();
 
