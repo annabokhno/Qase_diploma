@@ -22,6 +22,7 @@ jobs:
     env:
       QASE_EMAIL: ${{ secrets.QASE_EMAIL }}
       QASE_PASSWORD: ${{ secrets.QASE_PASSWORD }}
+      QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
       HEADLESS: true
 
     steps:

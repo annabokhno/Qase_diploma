@@ -12,15 +12,14 @@ import ui.pages.ProjectsPage;
 import ui.steps.LoginStep;
 import ui.steps.ProjectStep;
 import ui.steps.TestRunStep;
-import utils.PropertyReader;
 
 import java.util.HashMap;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class BaseTest {
 
-    protected static final String EMAIL = System.getProperty("QASE_EMAIL", PropertyReader.getProperty("QASE_EMAIL"));
-    protected static final String PASSWORD = System.getProperty("QASE_PASSWORD", PropertyReader.getProperty("QASE_PASSWORD"));
+    protected static final String EMAIL = System.getenv("QASE_EMAIL");
+    protected static final String PASSWORD = System.getenv("QASE_PASSWORD");
 
     LoginPage loginPage;
     protected String projectName;
