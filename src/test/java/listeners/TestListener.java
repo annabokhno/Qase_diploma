@@ -15,26 +15,37 @@ public class TestListener implements ITestListener, IAnnotationTransformer {
 
     @Override
     public void onTestStart(ITestResult iTestResult) {
-        log.info("======================================== STARTING TEST {} ========================================%n", iTestResult.getName());
+        log.info("======================================== STARTING TEST {} ========================================%n",
+                iTestResult.getName());
     }
 
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
-        log.info("======================================== FINISHED TEST {} Duration: {} ========================================%n", iTestResult.getName(),
+        log.info("======================================== FINISHED TEST {} Duration: {} ========================================%n",
+                iTestResult.getName(),
                 getExecutionTime(iTestResult));
     }
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
-        log.error("======================================== FAILED TEST {} Duration: {} ========================================%n", iTestResult.getName(),
+        log.error("======================================== FAILED TEST {} Duration: {} ========================================%n",
+                iTestResult.getName(),
                 getExecutionTime(iTestResult));
+
         WebDriver driver = (WebDriver) iTestResult.getTestContext().getAttribute("driver");
-        AllureUtils.takeScreenshot(driver);
+
+        if (driver != null) {
+            AllureUtils.takeScreenshot(driver);
+            log.info("Screenshot taken for failed test {}", iTestResult.getName());
+        } else {
+            log.warn("WebDriver is null. Screenshot skipped for failed test {}", iTestResult.getName());
+        }
     }
 
     @Override
     public void onTestSkipped(ITestResult iTestResult) {
-        log.warn("======================================== SKIPPING TEST {} ========================================%n", iTestResult.getName());
+        log.warn("======================================== SKIPPING TEST {} ========================================%n",
+                iTestResult.getName());
     }
 
     @Override
@@ -53,6 +64,8 @@ public class TestListener implements ITestListener, IAnnotationTransformer {
     }
 
     private long getExecutionTime(ITestResult iTestResult) {
-        return TimeUnit.MILLISECONDS.toSeconds(iTestResult.getEndMillis() - iTestResult.getStartMillis());
+        return TimeUnit.MILLISECONDS.toSeconds(
+                iTestResult.getEndMillis() - iTestResult.getStartMillis()
+        );
     }
 }
