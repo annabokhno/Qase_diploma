@@ -8,21 +8,23 @@
 
     <parameter name="browser" value="chrome"/>
 
-    <test name="UI 1">
-        <groups>
-            <run>
-                <include name="smoke"/>
-            </run>
-        </groups>
+    <test name="UI Tests">
         <classes>
+            <class name="tests.ui.LoginTest"/>
             <class name="tests.ui.ProjectTest"/>
+            <class name="tests.ui.TestCaseTest"/>
+            <class name="tests.ui.TestRunTest"/>
         </classes>
     </test>
 
-    <test name="UI 2">
+    <test name="API Tests">
         <classes>
-            <class name="tests.ui.LoginTest"/>
-            <class name="tests.ui.TestCaseTest"/>
+            <class name="tests.api.LoginAPITest"/>
+            <class name="tests.api.ProjectAPITest"/>
+            <class name="tests.api.CaseAPITest"/>
+            <class name="tests.api.DefectsAPITest"/>
+            <class name="tests.api.NegativeAPITest"/>
+            <class name="tests.api.ResultAPITest"/>
         </classes>
     </test>
 </suite>
