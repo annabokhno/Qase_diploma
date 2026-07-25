@@ -2,7 +2,6 @@ package api.adapters;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import groovy.beans.PropertyReader;
 import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -11,8 +10,6 @@ import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 
 public class BaseAdapter {
-
-    private static final String API_TOKEN = System.getenv("QASE_API_TOKEN");
 
     public static Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -24,7 +21,7 @@ public class BaseAdapter {
             .setBaseUri("https://api.qase.io")
             .setBasePath("/v1")
             .setContentType(ContentType.JSON)
-            .addHeader("Token", API_TOKEN)
+            .addHeader("Token", "a427acd5470dffad5f3ea1b69c02315246c32d3a35cdfd6e0e510479badb5d54")
             .addFilter(new AllureRestAssured())
             .build();
 
