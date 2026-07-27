@@ -38,7 +38,7 @@ jobs:
           cache: maven
 
       - name: Run tests
-        run: mvn clean test
+        run: mvn clean -DQASE_EMAIL=$QASE_EMAIL -DQASE_PASSWORD=QASE_PASSWORD test
 
       - name: Get Allure history
         uses: actions/checkout@v4

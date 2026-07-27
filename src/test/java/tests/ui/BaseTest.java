@@ -19,19 +19,8 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class BaseTest {
 
-    protected static final String EMAIL = getConfigValue("QASE_EMAIL");
-    protected static final String PASSWORD = getConfigValue("QASE_PASSWORD");
-
-    private static String getConfigValue(String key) {
-        String value = System.getProperty(key);
-        if (value == null || value.isBlank()) {
-            value = System.getenv(key);
-        }
-        if (value == null || value.isBlank()) {
-            value = PropertyReader.getProperty(key);
-        }
-        return value;
-    }
+    protected static final String EMAIL = System.getProperty("QASE_EMAIL", PropertyReader.getProperty("QASE_EMAIL"));
+    protected static final String PASSWORD = System.getProperty("QASE_PASSWORD", PropertyReader.getProperty("QASE_PASSWORD"));
 
     LoginPage loginPage;
     protected String projectName;
