@@ -19,8 +19,14 @@ import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 
 public class BaseTest {
 
-    protected static final String EMAIL = System.getProperty("QASE_EMAIL", PropertyReader.getProperty("QASE_EMAIL"));
-    protected static final String PASSWORD = System.getProperty("QASE_PASSWORD", PropertyReader.getProperty("QASE_PASSWORD"));
+    protected static final String EMAIL =
+            System.getProperty("QASE_EMAIL") != null
+                    ? System.getProperty("QASE_EMAIL")
+                    : PropertyReader.getProperty("QASE_EMAIL");
+    protected static final String PASSWORD =
+            System.getProperty("QASE_PASSWORD") != null
+                    ? System.getProperty("QASE_PASSWORD")
+                    : PropertyReader.getProperty("QASE_PASSWORD");
 
     LoginPage loginPage;
     protected String projectName;
