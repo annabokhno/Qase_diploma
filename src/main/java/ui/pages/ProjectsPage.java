@@ -19,12 +19,13 @@ public class ProjectsPage {
     public void openPage() {
         log.info("Opening projects page");
         open("/projects");
+        $(CREATE_NEW_PROJECT).shouldBe(Condition.visible);
     }
 
     @Step("Нажать кнопку создания нового проекта")
     public CreateProjectPage clickCreateProject() {
         log.info("Clicking Create new project button");
-        Button createProjectButton = new Button($(byText("Create new project")));
+        Button createProjectButton = new Button($(CREATE_NEW_PROJECT));
         createProjectButton.click();
         return new CreateProjectPage();
     }
