@@ -38,11 +38,12 @@ jobs:
           cache: maven
 
       - name: Run tests
+        env:
+          QASE_API_TOKEN: ${{ secrets.QASE_API_TOKEN }}
         run: >
           mvn clean test
           -DQASE_EMAIL="${QASE_EMAIL}"
           -DQASE_PASSWORD="${QASE_PASSWORD}"
-          -DQASE_API_TOKEN="${QASE_API_TOKEN}"
 
       - name: Get Allure history
         uses: actions/checkout@v4

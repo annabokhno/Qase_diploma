@@ -11,18 +11,7 @@ import io.restassured.specification.ResponseSpecification;
 
 public class BaseAdapter {
 
-    private static final String QASE_API_TOKEN = resolveToken();
-
-    private static String resolveToken() {
-        String token = System.getProperty("QASE_API_TOKEN");
-        if (token == null || token.isBlank()) {
-            token = System.getenv("QASE_API_TOKEN");
-        }
-        if (token == null || token.isBlank()) {
-            throw new IllegalStateException("QASE_API_TOKEN не задан");
-        }
-        return token;
-    }
+    private static final String QASE_API_TOKEN = System.getenv("QASE_API_TOKEN");
 
     public static Gson gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
