@@ -42,6 +42,7 @@ jobs:
           mvn clean test
           -DQASE_EMAIL="${QASE_EMAIL}"
           -DQASE_PASSWORD="${QASE_PASSWORD}"
+          -DQASE_API_TOKEN="${QASE_API_TOKEN}"
 
       - name: Get Allure history
         uses: actions/checkout@v4
