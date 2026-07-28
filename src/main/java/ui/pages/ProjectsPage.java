@@ -22,7 +22,7 @@ public class ProjectsPage {
     @Step("Нажать кнопку создания нового проекта")
     public CreateProjectPage clickCreateProject() {
         log.info("Clicking Create new project button");
-        $(byText("Create new project")).shouldBe(Condition.visible).click();
+        $(byText("Create new project")).click();
         return new CreateProjectPage();
     }
 
