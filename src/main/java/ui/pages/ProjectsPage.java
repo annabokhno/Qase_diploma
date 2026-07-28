@@ -3,9 +3,9 @@ package ui.pages;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import ui.wrappers.Button;
-import ui.wrappers.Input;
-import ui.wrappers.ProjectCard;
+
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static ui.dict.Elements.*;
@@ -13,28 +13,25 @@ import static ui.dict.Elements.*;
 @Log4j2
 public class ProjectsPage {
 
-    private final Input searchProjectInput = new Input($(SEARCH_PROJECT));
-
     @Step("Открыть страницу проектов")
     public void openPage() {
         log.info("Opening projects page");
         open("/projects");
-        $(CREATE_NEW_PROJECT).shouldBe(Condition.visible);
     }
 
     @Step("Нажать кнопку создания нового проекта")
     public CreateProjectPage clickCreateProject() {
         log.info("Clicking Create new project button");
-        Button createProjectButton = new Button($(CREATE_NEW_PROJECT));
-        createProjectButton.click();
+        $(byText("Create new project")).shouldBe(Condition.visible).click();
         return new CreateProjectPage();
     }
 
     @Step("Проверить, что проект отображается: {projectName}")
     public void checkProjectDisplayed(String projectName) {
         log.info("Checking project '{}' is displayed", projectName);
-        ProjectCard projectCard = new ProjectCard($$(PROJECT_CARDS).findBy(Condition.text(projectName)));
-        projectCard.shouldBeVisible();
+        $$(PROJECT_CARDS)
+                .findBy(Condition.text(projectName))
+                .shouldBe(Condition.visible, Duration.ofSeconds(10));
     }
 
     @Step("Проверить, что проект отсутствует: {projectName}")
@@ -46,30 +43,26 @@ public class ProjectsPage {
     @Step("Открыть проект: {name}")
     public void openProject(String name) {
         log.info("Opening project '{}'", name);
-        ProjectCard projectCard = new ProjectCard($(byText(name)));
-        projectCard.click();
+        $(byText(name)).shouldBe(Condition.visible).click();
     }
 
     @Step("Выполнить поиск проекта: {name}")
     public void searchProject(String name) {
         log.info("Searching project '{}'", name);
-        searchProjectInput.setValue(name);
+        $(SEARCH_PROJECT).shouldBe(Condition.visible).setValue(name);
     }
 
     @Step("Проверить результат поиска проекта: {name}")
     public void checkSearchResult(String name) {
         log.info("Checking search result for project '{}'", name);
-        ProjectCard projectCard = new ProjectCard($x(String.format(PROJECT_BY_NAME, name)));
-        projectCard.shouldBeVisible();
+        $x(String.format(PROJECT_BY_NAME, name)).shouldBe(Condition.visible);
     }
 
     @Step("Открыть меню проекта: {projectName}")
     public ProjectSettingsPage openProjectMenu(String projectName) {
         log.info("Opening project menu for '{}'", projectName);
-        ProjectCard projectCard = new ProjectCard($x(String.format(PROJECT_BY_NAME, projectName)));
-        projectCard.shouldBeVisible();
-        Button menuButton = new Button($x(String.format(PROJECT_MENU_BUTTON, projectName)));
-        menuButton.click();
+        $x(String.format(PROJECT_BY_NAME, projectName)).shouldBe(Condition.visible);
+        $x(String.format(PROJECT_MENU_BUTTON, projectName)).click();
         return new ProjectSettingsPage();
     }
 }
